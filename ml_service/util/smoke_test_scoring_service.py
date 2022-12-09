@@ -26,12 +26,10 @@ def call_web_service(e, service_type, service_name):
         service = AksWebservice(aml_workspace, service_name)
     if service.auth_enabled:
         service_keys = service.get_keys()
-        headers['Authorization'] = 'Bearer ' + service_keys[0]
+        headers['Authorization'] = f'Bearer {service_keys[0]}'
     print("Testing service")
-    print(". url: %s" % service.scoring_uri)
-    output = call_web_app(service.scoring_uri, headers)
-
-    return output
+    print(f". url: {service.scoring_uri}")
+    return call_web_app(service.scoring_uri, headers)
 
 
 def call_web_app(url, headers):

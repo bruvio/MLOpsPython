@@ -53,7 +53,7 @@ def parse_args() -> List[str]:
         if itm == "--model_name"
     ]
 
-    if len(model_name_param) == 0:
+    if not model_name_param:
         raise ValueError(
             "Model name is required but no model name parameter was passed to the script"  # NOQA: E501
         )
@@ -67,8 +67,8 @@ def parse_args() -> List[str]:
     ]
     model_version = (
         None
-        if len(model_version_param) < 1
-        or len(model_version_param[0][1].strip()) == 0  # NOQA: E501
+        if not model_version_param
+        or len(model_version_param[0][1].strip()) == 0
         else model_version_param[0][1]
     )
 
@@ -79,8 +79,8 @@ def parse_args() -> List[str]:
     ]
     model_tag_name = (
         None
-        if len(model_tag_name_param) < 1
-        or len(model_tag_name_param[0][1].strip()) == 0  # NOQA: E501
+        if not model_tag_name_param
+        or len(model_tag_name_param[0][1].strip()) == 0
         else model_tag_name_param[0][1]
     )
 
@@ -91,7 +91,7 @@ def parse_args() -> List[str]:
     ]
     model_tag_value = (
         None
-        if len(model_tag_value_param) < 1
+        if not model_tag_value_param
         or len(model_tag_name_param[0][1].strip()) == 0
         else model_tag_value_param[0][1]
     )
@@ -120,9 +120,9 @@ def init():
         modelpath = Model.get_model_path(
             model_name=amlmodel.name, version=amlmodel.version)
         model = joblib.load(modelpath)
-        print("Loaded model {}".format(model_filter[0]))
+        print(f"Loaded model {model_filter[0]}")
     except Exception as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 def run(mini_batch: pd.DataFrame) -> pd.DataFrame:

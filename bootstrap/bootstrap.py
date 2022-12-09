@@ -54,10 +54,7 @@ class Helper:
     def delete_dir(self):
         # Delete unwanted directories
         dirs = ["docs", r"diabetes_regression"]
-        if (platform.system() == "Windows"):
-            cmd = 'rmdir /S /Q "{}"'
-        else:
-            cmd = 'rm -r "{}"'
+        cmd = 'rmdir /S /Q "{}"' if (platform.system() == "Windows") else 'rm -r "{}"'
         for dir in dirs:
             os.system(cmd.format(os.path.join(self._project_directory, os.path.normpath(dir))))  # NOQA: E501
 
@@ -151,5 +148,5 @@ def main(args):
     return 0
 
 
-if '__main__' == __name__:
+if __name__ == '__main__':
     sys.exit(main(sys.argv))

@@ -38,9 +38,10 @@ def split_data(df):
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=0)
-    data = {"train": {"X": X_train, "y": y_train},
-            "test": {"X": X_test, "y": y_test}}
-    return data
+    return {
+        "train": {"X": X_train, "y": y_train},
+        "test": {"X": X_test, "y": y_test},
+    }
 
 
 # Train the model, return the model
@@ -54,8 +55,7 @@ def train_model(data, ridge_args):
 def get_model_metrics(model, data):
     preds = model.predict(data["test"]["X"])
     mse = mean_squared_error(preds, data["test"]["y"])
-    metrics = {"mse": mse}
-    return metrics
+    return {"mse": mse}
 
 
 def main():

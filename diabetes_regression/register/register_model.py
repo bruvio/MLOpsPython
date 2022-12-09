@@ -107,7 +107,7 @@ def main():
             print(f"Could not find {tag} metric on parent run.")
 
     # load the model
-    print("Loading model from " + model_path)
+    print(f"Loading model from {model_path}")
     model_file = os.path.join(model_path, model_name)
     model = joblib.load(model_file)
     parent_tags = run.parent.get_tags()
@@ -183,7 +183,7 @@ def register_aml_model(
         tagsValue = {"area": "diabetes_regression",
                      "run_id": run_id,
                      "experiment_name": exp.name}
-        tagsValue.update(model_tags)
+        tagsValue |= model_tags
         if (build_id != 'none'):
             model_already_registered(model_name, exp, run_id)
             tagsValue["BuildId"] = build_id
@@ -199,10 +199,7 @@ def register_aml_model(
                        Dataset.get_by_id(exp.workspace, dataset_id))])
         os.chdir("..")
         print(
-            "Model registered: {} \nModel Description: {} "
-            "\nModel Version: {}".format(
-                model.name, model.description, model.version
-            )
+            f"Model registered: {model.name} \nModel Description: {model.description} \nModel Version: {model.version}"
         )
     except Exception:
         traceback.print_exc(limit=None, file=None, chain=True)

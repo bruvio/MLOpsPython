@@ -71,7 +71,6 @@ def get_or_create_datastore(
 
         datastore = ws.datastores[datastorename]
 
-    # the datastore is not registered but we have all details to register it
     elif (
         env.scoring_datastore_access_key is not None
         and containername is not None  # NOQA: E501
@@ -86,9 +85,7 @@ def get_or_create_datastore(
         )
     else:
         raise ValueError(
-            "No existing datastore named {} nor was enough information supplied to create one.".format(  # NOQA: E501
-                datastorename
-            )
+            f"No existing datastore named {datastorename} nor was enough information supplied to create one."
         )
 
     return datastore
@@ -161,13 +158,11 @@ def get_fallback_input_dataset(ws: Workspace, env: Env) -> Dataset:
         overwrite=False,
     )
 
-    scoringinputds = (
+    return (
         Dataset.Tabular.from_delimited_files(scoreinputdataref)
         .register(ws, env.scoring_dataset_name, create_new_version=True)
         .as_named_input(env.scoring_dataset_name)
     )
-
-    return scoringinputds
 
 
 def get_output_location(
@@ -187,21 +182,18 @@ def get_output_location(
     :returns: PipelineData wrapping the output datastore
     """
 
-    if outputdatastore is None:
-        output_loc = PipelineData(
+    return (
+        PipelineData(
             name="defaultoutput", datastore=ws.get_default_datastore()
         )
-    else:
-        output_loc = PipelineData(
-            name=outputdatastore.name, datastore=outputdatastore
-        )  # NOQA: E501
-
-    return output_loc
+        if outputdatastore is None
+        else PipelineData(name=outputdatastore.name, datastore=outputdatastore)
+    )
 
 
 def get_inputds_outputloc(
     ws: Workspace, env: Env
-) -> Tuple[Dataset, PipelineData]:  # NOQA: E501
+) -> Tuple[Dataset, PipelineData]:    # NOQA: E501
     """
     Prepare the input and output for the scoring step. Input is a tabular
     dataset wrapped around the scoring data. Output is PipelineData
@@ -219,13 +211,10 @@ def get_inputds_outputloc(
         output_loc = get_output_location(ws, env)
     else:
         inputdatastore = get_or_create_datastore(
-            "{}_in".format(env.scoring_datastore_storage_name), ws, env
+            f"{env.scoring_datastore_storage_name}_in", ws, env
         )
         outputdatastore = get_or_create_datastore(
-            "{}_out".format(env.scoring_datastore_storage_name),
-            ws,
-            env,
-            input=False,  # NOQA: E501
+            f"{env.scoring_datastore_storage_name}_out", ws, env, input=False
         )
         scoringinputds = get_input_dataset(ws, inputdatastore, env)
         output_loc = get_output_location(ws, env, outputdatastore)
@@ -415,9 +404,7 @@ def build_batchscore_pipeline():
             name=env.scoring_pipeline_name,
             description="Diabetes Batch Scoring Pipeline",
         )
-        pipeline_id_string = "##vso[task.setvariable variable=pipeline_id;isOutput=true]{}".format(  # NOQA: E501
-            published_pipeline.id
-        )
+        pipeline_id_string = f"##vso[task.setvariable variable=pipeline_id;isOutput=true]{published_pipeline.id}"
         print(pipeline_id_string)
     except Exception as e:
         print(e)

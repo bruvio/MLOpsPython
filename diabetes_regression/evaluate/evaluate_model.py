@@ -23,6 +23,7 @@ IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THE SOFTWARE CODE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
+
 from azureml.core import Run
 import argparse
 import traceback
@@ -70,8 +71,6 @@ run = Run.get_context()
 # if you would like to use Offline mode
 exp = run.experiment
 ws = run.experiment.workspace
-run_id = 'amlcompute'
-
 parser = argparse.ArgumentParser("evaluate")
 
 parser.add_argument(
@@ -94,8 +93,7 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
-if (args.run_id is not None):
-    run_id = args.run_id
+run_id = args.run_id if (args.run_id is not None) else 'amlcompute'
 if (run_id == 'amlcompute'):
     run_id = run.parent.id
 model_name = args.model_name
@@ -126,10 +124,7 @@ try:
                 run.parent.cancel()
         else:
             print(
-                "Current Production model mse: {}, "
-                "New trained model mse: {}".format(
-                    production_model_mse, new_model_mse
-                )
+                f"Current Production model mse: {production_model_mse}, New trained model mse: {new_model_mse}"
             )
 
         if (new_model_mse < production_model_mse):

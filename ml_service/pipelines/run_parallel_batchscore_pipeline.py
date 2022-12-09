@@ -47,9 +47,7 @@ def get_pipeline(pipeline_id, ws: Workspace, env: Env):
         ]  # noqa E501
 
         if scoringpipelinelist.count == 0:
-            raise Exception(
-                "No pipeline found matching name:{}".format(env.scoring_pipeline_name)  # NOQA: E501
-            )
+            raise Exception(f"No pipeline found matching name:{env.scoring_pipeline_name}")
         else:
             # latest published
             scoringpipeline = scoringpipelinelist[0]
@@ -58,16 +56,14 @@ def get_pipeline(pipeline_id, ws: Workspace, env: Env):
 
 
 def copy_output(step_id: str, env: Env):
-    accounturl = "https://{}.blob.core.windows.net".format(
-        env.scoring_datastore_storage_name
+    accounturl = (
+        f"https://{env.scoring_datastore_storage_name}.blob.core.windows.net"
     )
 
-    srcblobname = "azureml/{}/{}_out/parallel_run_step.txt".format(
-        step_id, env.scoring_datastore_storage_name
-    )
+    srcblobname = f"azureml/{step_id}/{env.scoring_datastore_storage_name}_out/parallel_run_step.txt"
 
-    srcbloburl = "{}/{}/{}".format(
-        accounturl, env.scoring_datastore_output_container, srcblobname
+    srcbloburl = (
+        f"{accounturl}/{env.scoring_datastore_output_container}/{srcblobname}"
     )
 
     containerclient = ContainerClient(
@@ -87,9 +83,7 @@ def copy_output(step_id: str, env: Env):
         .replace(".", "_")
     )  # noqa E501
     destfilenameparts = env.scoring_datastore_output_filename.split(".")
-    destblobname = "{}/{}_{}.{}".format(
-        destfolder, destfilenameparts[0], filetime, destfilenameparts[1]
-    )
+    destblobname = f"{destfolder}/{destfilenameparts[0]}_{filetime}.{destfilenameparts[1]}"
 
     destblobclient = containerclient.get_blob_client(destblobname)
     destblobclient.start_copy_from_url(srcbloburl)
@@ -127,7 +121,7 @@ def run_batchscore_pipeline():
             copy_output(list(run.get_steps())[0].id, env)
 
     except Exception as ex:
-        print("Error: {}".format(ex))
+        print(f"Error: {ex}")
 
 
 if __name__ == "__main__":

@@ -42,11 +42,9 @@ def parse_args():
 
 
 def copy_output(args):
-    print("Output : {}".format(args.output_path))
+    print(f"Output : {args.output_path}")
 
-    accounturl = "https://{}.blob.core.windows.net".format(
-        args.scoring_datastore
-    )  # NOQA E501
+    accounturl = f"https://{args.scoring_datastore}.blob.core.windows.net"
 
     containerclient = ContainerClient(
         accounturl, args.score_container, args.scoring_datastore_key
@@ -61,9 +59,7 @@ def copy_output(args):
         .replace(".", "_")
     )  # noqa E501
     destfilenameparts = args.scoring_output_filename.split(".")
-    destblobname = "{}/{}_{}.{}".format(
-        destfolder, destfilenameparts[0], filetime, destfilenameparts[1]
-    )
+    destblobname = f"{destfolder}/{destfilenameparts[0]}_{filetime}.{destfilenameparts[1]}"
 
     destblobclient = containerclient.get_blob_client(destblobname)
     with open(

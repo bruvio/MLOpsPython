@@ -37,10 +37,7 @@ def main():
     run_config = RunConfiguration()
     run_config.environment = environment
 
-    if e.datastore_name:
-        datastore_name = e.datastore_name
-    else:
-        datastore_name = aml_workspace.get_default_datastore().name
+    datastore_name = e.datastore_name or aml_workspace.get_default_datastore().name
     run_config.environment.environment_variables[
         "DATASTORE_NAME"
     ] = datastore_name  # NOQA: E501
@@ -69,9 +66,8 @@ def main():
 
         if not os.path.exists(file_name):
             raise Exception(
-                'Could not find CSV dataset at "%s". If you have bootstrapped your project, you will need to provide a CSV.'  # NOQA: E501
-                % file_name
-            )  # NOQA: E501
+                f'Could not find CSV dataset at "{file_name}". If you have bootstrapped your project, you will need to provide a CSV.'
+            )
 
         # Upload file to default datastore in workspace
         datatstore = Datastore.get(aml_workspace, datastore_name)

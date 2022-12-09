@@ -93,12 +93,12 @@ def main():
 
     args = parser.parse_args()
 
-    print("Argument [model_name]: %s" % args.model_name)
-    print("Argument [step_output]: %s" % args.step_output)
-    print("Argument [dataset_version]: %s" % args.dataset_version)
-    print("Argument [data_file_path]: %s" % args.data_file_path)
-    print("Argument [caller_run_id]: %s" % args.caller_run_id)
-    print("Argument [dataset_name]: %s" % args.dataset_name)
+    print(f"Argument [model_name]: {args.model_name}")
+    print(f"Argument [step_output]: {args.step_output}")
+    print(f"Argument [dataset_version]: {args.dataset_version}")
+    print(f"Argument [data_file_path]: {args.data_file_path}")
+    print(f"Argument [caller_run_id]: {args.caller_run_id}")
+    print(f"Argument [dataset_name]: {args.dataset_name}")
 
     model_name = args.model_name
     step_output_path = args.step_output

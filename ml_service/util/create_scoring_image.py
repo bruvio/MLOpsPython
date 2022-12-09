@@ -50,10 +50,12 @@ os.chdir(cwd)
 if package.state != "Succeeded":
     raise Exception("Image creation status: {package.creation_state}")
 
-print("Package stored at {} with build log {}".format(package.location, package.package_build_log_uri))  # NOQA: E501
+print(
+    f"Package stored at {package.location} with build log {package.package_build_log_uri}"
+)
 
 # Save the Image Location for other AzDO jobs after script is complete
 if args.output_image_location_file is not None:
-    print("Writing image location to %s" % args.output_image_location_file)
+    print(f"Writing image location to {args.output_image_location_file}")
     with open(args.output_image_location_file, "w") as out_file:
         out_file.write(str(package.location))
